@@ -1,0 +1,167 @@
+.container {
+  margin: 16px 0 !important;
+  width: 100% !important;
+}
+
+.expandButton {
+  width: 100% !important;
+  padding: 14px 18px !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  color: white !important;
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
+}
+
+.expandButton:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
+}
+
+.expandButton:active {
+  transform: translateY(0) !important;
+}
+
+.expandIcon {
+  font-size: 12px !important;
+  margin-right: 10px !important;
+}
+
+.expandText {
+  flex: 1 !important;
+  text-align: left !important;
+}
+
+.badge {
+  background: rgba(255, 255, 255, 0.25) !important;
+  padding: 4px 10px !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+
+.categories {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)) !important;
+  gap: 10px !important;
+  margin: 16px 0 !important;
+}
+
+.categoryButton {
+  padding: 12px 16px !important;
+  background: white !important;
+  border: 2px solid #e9ecef !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  cursor: pointer !important;
+  transition: all 0.25s ease !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 6px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05) !important;
+}
+
+.categoryEmoji {
+  font-size: 20px !important;
+  line-height: 1 !important;
+}
+
+.categoryButton:hover {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%) !important;
+  border-color: #667eea !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.2) !important;
+}
+
+.categoryButton.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  border-color: #667eea !important;
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.35) !important;
+  transform: translateY(-2px) !important;
+}
+
+.grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
+  gap: 14px !important;
+  max-height: 320px !important;
+  overflow-y: auto !important;
+  padding: 16px !important;
+  border: 2px solid #e9ecef !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, #fafbfc 0%, #ffffff 100%) !important;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+}
+
+.grid::-webkit-scrollbar {
+  width: 8px !important;
+}
+
+.grid::-webkit-scrollbar-track {
+  background: #f1f3f5 !important;
+  border-radius: 4px !important;
+}
+
+.grid::-webkit-scrollbar-thumb {
+  background: #cbd5e0 !important;
+  border-radius: 4px !important;
+}
+
+.grid::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0 !important;
+}
+
+.item {
+  padding: 16px 12px !important;
+  background: white !important;
+  border: 2px solid #e9ecef !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  text-align: center !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+
+.item:hover {
+  background: linear-gradient(135deg, #f5f3ff 0%, #ffffff 100%) !important;
+  border-color: #667eea !important;
+  transform: translateY(-5px) scale(1.03) !important;
+  box-shadow: 0 10px 24px rgba(102, 126, 234, 0.25) !important;
+}
+
+.item:active {
+  transform: translateY(-2px) scale(0.99) !important;
+}
+
+.itemName {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #1e293b !important;
+  line-height: 1.4 !important;
+}
+
+.preview {
+  font-size: 11px !important;
+  color: #64748b !important;
+  font-family: "JetBrains Mono", "Fira Code", monospace !important;
+  word-break: break-word !important;
+  font-weight: 500 !important;
+  line-height: 1.5 !important;
+  background: #f8fafc !important;
+  padding: 8px !important;
+  border-radius: 6px !important;
+  border: 1px solid #e2e8f0 !important;
+}

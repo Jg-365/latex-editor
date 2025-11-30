@@ -1,0 +1,363 @@
+.container {
+  padding: 20px !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%) !important;
+  min-height: 100vh !important;
+}
+
+.error {
+  padding: 16px !important;
+  background: linear-gradient(135deg, #fee 0%, #fdd 100%) !important;
+  border: 2px solid #f88 !important;
+  border-radius: 12px !important;
+  margin: 12px 0 !important;
+  box-shadow: 0 4px 12px rgba(255, 100, 100, 0.15) !important;
+  animation: shake 0.3s ease !important;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+.footer {
+  margin-top: 24px !important;
+  padding-top: 20px !important;
+  border-top: 2px solid #e9ecef !important;
+  text-align: center !important;
+  opacity: 0.7 !important;
+}
+
+.optionsContainer {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+  gap: 16px !important;
+  padding: 16px !important;
+  background: white !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  margin: 12px 0 !important;
+}
+
+.optionItem {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.label {
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  color: #495057 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.sizeValue {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #667eea !important;
+  background: linear-gradient(135deg, #f5f3ff 0%, #ffffff 100%) !important;
+  padding: 4px 12px !important;
+  border-radius: 8px !important;
+  border: 2px solid #e9ecef !important;
+}
+
+.slider {
+  width: 100% !important;
+  height: 8px !important;
+  border-radius: 8px !important;
+  background: linear-gradient(135deg, #e9ecef 0%, #f8f9fa 100%) !important;
+  outline: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  width: 22px !important;
+  height: 22px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4) !important;
+  transition: all 0.2s ease !important;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2) !important;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5) !important;
+}
+
+.slider::-webkit-slider-thumb:active {
+  transform: scale(1.1) !important;
+}
+
+.slider::-moz-range-thumb {
+  width: 22px !important;
+  height: 22px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  cursor: pointer !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4) !important;
+  transition: all 0.2s ease !important;
+}
+
+.slider::-moz-range-thumb:hover {
+  transform: scale(1.2) !important;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5) !important;
+}
+
+.slider:hover {
+  background: linear-gradient(135deg, #cbd5e0 0%, #e9ecef 100%) !important;
+}
+
+.input {
+  width: 100% !important;
+  padding: 10px 12px !important;
+  border: 2px solid #e9ecef !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  transition: all 0.2s ease !important;
+  background: white !important;
+}
+
+.input:focus {
+  outline: none !important;
+  border-color: #667eea !important;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15) !important;
+  transform: translateY(-1px) !important;
+}
+
+.inputSmall {
+  width: 100% !important;
+  padding: 8px 12px !important;
+  border: 2px solid #e9ecef !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  transition: all 0.2s ease !important;
+  background: white !important;
+}
+
+.inputSmall:focus {
+  outline: none !important;
+  border-color: #667eea !important;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15) !important;
+  transform: translateY(-1px) !important;
+}
+
+.colorPicker {
+  width: 100% !important;
+  height: 44px !important;
+  border: 2px solid #e9ecef !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.colorPicker:hover {
+  border-color: #0066ff !important;
+  transform: scale(1.05) !important;
+}
+
+.modeButton {
+  padding: 10px 20px !important;
+  border: 2px solid #e9ecef !important;
+  border-radius: 8px !important;
+  background: white !important;
+  color: #495057 !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  font-size: 14px !important;
+}
+
+.modeButton:hover {
+  border-color: #0066ff !important;
+  background: #f0f7ff !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.15) !important;
+}
+
+.modeButton.active {
+  background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%) !important;
+  color: white !important;
+  border-color: #0066ff !important;
+  box-shadow: 0 4px 16px rgba(0, 102, 255, 0.3) !important;
+}
+
+.header {
+  text-align: center !important;
+  margin-bottom: 24px !important;
+  padding: 20px !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border-radius: 16px !important;
+  color: white !important;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.25) !important;
+}
+
+.header h2 {
+  color: white !important;
+  margin: 0 !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.header p {
+  color: rgba(255, 255, 255, 0.9) !important;
+  margin: 8px 0 0 0 !important;
+  font-size: 14px !important;
+}
+
+.inputSection {
+  margin: 20px 0 !important;
+}
+
+.inputLabel {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  color: #495057 !important;
+  margin-bottom: 10px !important;
+}
+
+.inputLabel span {
+  font-size: 18px !important;
+}
+
+.addButton {
+  width: 100% !important;
+  padding: 16px 24px !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border: none !important;
+  border-radius: 14px !important;
+  color: white !important;
+  font-weight: 700 !important;
+  font-size: 16px !important;
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  margin: 20px 0 !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.addButton::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 0 !important;
+  height: 0 !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.3) !important;
+  transform: translate(-50%, -50%) !important;
+  transition:
+    width 0.6s,
+    height 0.6s !important;
+}
+
+.addButton:hover::before {
+  width: 300px !important;
+  height: 300px !important;
+}
+
+.addButton:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.45) !important;
+}
+
+.addButton:active {
+  transform: translateY(-1px) scale(0.98) !important;
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.35) !important;
+}
+
+.addButton:disabled {
+  background: linear-gradient(135deg, #cbd5e0 0%, #a0aec0 100%) !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+  opacity: 0.6 !important;
+}
+
+.addButton:disabled:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.buttonIcon {
+  font-size: 20px !important;
+  line-height: 1 !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.buttonText {
+  position: relative !important;
+  z-index: 1 !important;
+  letter-spacing: 0.3px !important;
+}
+
+.tabs {
+  display: flex !important;
+  gap: 12px !important;
+  margin-bottom: 20px !important;
+  background: white !important;
+  padding: 8px !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+.tabButton {
+  flex: 1 !important;
+  padding: 14px 20px !important;
+  background: transparent !important;
+  border: 2px solid transparent !important;
+  border-radius: 8px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  color: #64748b !important;
+}
+
+.tabButton:hover {
+  background: #f8f9fa !important;
+  color: #495057 !important;
+}
+
+.activeTab {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
+}
+
+.activeTab:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+}

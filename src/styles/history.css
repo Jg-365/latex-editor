@@ -1,0 +1,47 @@
+.container {
+  margin: 16px 0;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.list {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 8px;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  background-color: white;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.item:hover {
+  border-color: #0066ff;
+  box-shadow: 0 2px 4px rgba(0, 102, 255, 0.1);
+}
+
+.latex {
+  flex: 1;
+  font-family: monospace;
+  font-size: 12px;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 12px;
+}
+
+.time {
+  font-size: 11px;
+  color: #999;
+  white-space: nowrap;
+}

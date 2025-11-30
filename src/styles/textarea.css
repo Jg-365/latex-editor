@@ -1,0 +1,38 @@
+.textarea {
+  width: 100% !important;
+  padding: 16px !important;
+  font-family:
+    "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "source-code-pro", monospace !important;
+  font-size: 15px !important;
+  line-height: 1.7 !important;
+  border: 3px solid #e9ecef !important;
+  border-radius: 12px !important;
+  background: linear-gradient(to bottom, #ffffff 0%, #fafbfc 100%) !important;
+  color: #212529 !important;
+  resize: none !important;
+  overflow-y: auto !important;
+  transition: all 0.3s ease !important;
+  box-sizing: border-box !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+.textarea:focus {
+  outline: none !important;
+  border-color: #0066ff !important;
+  box-shadow:
+    0 0 0 4px rgba(0, 102, 255, 0.12),
+    0 4px 16px rgba(0, 0, 0, 0.1) !important;
+  transform: translateY(-2px) !important;
+  background: #ffffff !important;
+}
+
+.textarea:hover:not(:focus) {
+  border-color: #cbd5e0 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+.textarea::placeholder {
+  color: #94a3b8 !important;
+  opacity: 0.7 !important;
+  font-style: italic !important;
+}
