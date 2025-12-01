@@ -140,6 +140,11 @@ export const OptionsPanel: React.FC<{
   );
 };
 
+const BACKEND_URL =
+  typeof BACKEND_HOST !== "undefined"
+    ? BACKEND_HOST
+    : import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
+
 export const App = () => {
   const [activeTab, setActiveTab] = useState<"latex" | "graph">("latex");
   const [latex, setLatex] = useState<string>("E = mc^2");
@@ -151,32 +156,80 @@ export const App = () => {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [error, setError] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [compiledImage, setCompiledImage] = useState<string>("");
+  const [useBackend, setUseBackend] = useState(false);
+  const [transparentBackground, setTransparentBackground] = useState(false);
 
-  // Validar LaTeX ao digitar (apenas para fórmulas simples)
+  // Detectar se precisa usar backend para compilação
   useEffect(() => {
-    // Se contém comandos avançados do LaTeX, não valida com KaTeX
     const advancedLatexPatterns =
       /\\begin\{(itemize|enumerate|description|tikzpicture|tabular|figure|align|equation|cases|pmatrix|bmatrix|vmatrix|matrix)\}|\\item\b|\\usepackage|\\documentclass/;
 
     if (advancedLatexPatterns.test(latex)) {
-      setError(""); // LaTeX avançado será validado pelo renderizador customizado
-      return;
-    }
-
-    // Para fórmulas matemáticas simples, valida com KaTeX
-    try {
-      katex.renderToString(latex, {
-        displayMode: options.displayMode,
-        throwOnError: true,
-        trust: true,
-      });
+      setUseBackend(true);
       setError("");
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
+    } else {
+      setUseBackend(false);
+      // Validar fórmulas simples com KaTeX
+      try {
+        katex.renderToString(latex, {
+          displayMode: options.displayMode,
+          throwOnError: true,
+          trust: true,
+        });
+        setError("");
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        }
       }
     }
   }, [latex, options.displayMode]);
+
+  // Compilar LaTeX avançado com backend
+  const compileWithBackend = async () => {
+    if (!useBackend || !latex.trim()) return;
+
+    setIsProcessing(true);
+    setError("");
+
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/compile`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ latex, transparent: transparentBackground }),
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.image) {
+        setCompiledImage(`data:image/png;base64,${data.image}`);
+        setError("");
+      } else {
+        setError(data.error || "Erro ao compilar LaTeX");
+        setCompiledImage("");
+      }
+    } catch (err) {
+      console.error("Backend error:", err);
+      setError(
+        "Backend indisponível. Instale MiKTeX, ImageMagick e execute: cd backend && npm install && npm start",
+      );
+      setCompiledImage("");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  // Auto-compilar quando código LaTeX avançado muda
+  useEffect(() => {
+    if (useBackend) {
+      const timer = setTimeout(() => {
+        compileWithBackend();
+      }, 1000); // Debounce de 1 segundo
+      return () => clearTimeout(timer);
+    }
+    return undefined;
+  }, [latex, useBackend, transparentBackground]);
 
   const handleAddToDesign = async () => {
     if (error || !latex.trim()) {
@@ -185,47 +238,72 @@ export const App = () => {
 
     setIsProcessing(true);
     try {
-      // Renderizar LaTeX para HTML
-      const html = katex.renderToString(latex, {
-        displayMode: options.displayMode,
-        throwOnError: true,
-        output: "html",
-      });
+      let dataUrl: string;
+      let imageWidth = 400;
+      let imageHeight = 300;
 
-      // Criar elemento temporário para renderizar
-      const container = document.createElement("div");
-      container.style.position = "absolute";
-      container.style.left = "-9999px";
-      container.style.top = "0";
-      container.style.fontSize = `${options.fontSize}px`;
-      container.style.color = options.color;
-      container.style.padding = "40px";
-      container.style.background = "transparent";
-      container.innerHTML = html;
-      document.body.appendChild(container);
+      if (useBackend && compiledImage) {
+        // Usar imagem compilada pelo backend
+        dataUrl = compiledImage;
 
-      // Usar html2canvas para capturar o elemento com todas as fontes e estilos
-      const canvas = await html2canvas(container, {
-        backgroundColor: null,
-        scale: 2,
-        logging: false,
-        useCORS: true,
-      });
+        // Obter dimensões reais da imagem
+        const img = new Image();
+        await new Promise((resolve, reject) => {
+          img.onload = resolve;
+          img.onerror = reject;
+          img.src = compiledImage;
+        });
+        imageWidth = img.naturalWidth;
+        imageHeight = img.naturalHeight;
 
-      document.body.removeChild(container);
+        // Escalar para caber no design (máximo 800px de largura)
+        const maxWidth = 800;
+        if (imageWidth > maxWidth) {
+          const scale = maxWidth / imageWidth;
+          imageWidth = maxWidth;
+          imageHeight = Math.round(imageHeight * scale);
+        }
+      } else {
+        // Renderizar com KaTeX (fórmulas simples)
+        const html = katex.renderToString(latex, {
+          displayMode: options.displayMode,
+          throwOnError: true,
+          output: "html",
+        });
 
-      // Converter canvas para PNG data URL
-      const dataUrl = canvas.toDataURL("image/png");
+        const container = document.createElement("div");
+        container.style.position = "absolute";
+        container.style.left = "-9999px";
+        container.style.top = "0";
+        container.style.fontSize = `${options.fontSize}px`;
+        container.style.color = options.color;
+        container.style.padding = "40px";
+        container.style.background = "transparent";
+        container.innerHTML = html;
+        document.body.appendChild(container);
 
-      // Adicionar ao design usando API atualizada com dimensões
+        const canvas = await html2canvas(container, {
+          backgroundColor: null,
+          scale: 2,
+          logging: false,
+          useCORS: true,
+        });
+
+        document.body.removeChild(container);
+        dataUrl = canvas.toDataURL("image/png");
+        imageWidth = canvas.width;
+        imageHeight = canvas.height;
+      }
+
+      // Adicionar ao design com dimensões corretas
       await addElementAtPoint({
         type: "image",
         dataUrl: dataUrl,
         altText: undefined,
         top: 0,
         left: 0,
-        width: canvas.width / 2,
-        height: canvas.height / 2,
+        width: imageWidth,
+        height: imageHeight,
       });
 
       // Adicionar ao histórico
@@ -265,7 +343,7 @@ export const App = () => {
             className={`${styles.tabButton} ${activeTab === "latex" ? styles.activeTab : ""}`}
             onClick={() => setActiveTab("latex")}
           >
-            ✨ LaTeX
+            ✨ LaTeX & Diagramas
           </button>
           <button
             className={`${styles.tabButton} ${activeTab === "graph" ? styles.activeTab : ""}`}
@@ -278,23 +356,56 @@ export const App = () => {
         {activeTab === "latex" && (
           <>
             <div className={styles.header}>
-              <Title size="medium">✨ Editor de Equações LaTeX</Title>
+              <Title size="medium">✨ Editor LaTeX Completo</Title>
               <Text size="small" tone="tertiary">
-                Crie equações matemáticas profissionais para seus designs
+                Equações, diagramas TikZ, tabelas, listas - qualquer código
+                LaTeX!
               </Text>
             </div>
 
             <div className={styles.inputSection}>
               <label className={styles.inputLabel}>
-                <span>📝</span> Digite sua equação LaTeX:
+                <span>📝</span> Digite seu código LaTeX:
               </label>
               <AutoExpandingTextarea
                 value={latex}
                 onChange={setLatex}
-                placeholder="Ex: E = mc^2 ou \frac{a}{b} ou \int_{0}^{\infty} e^{-x} dx"
+                placeholder="Ex: E = mc^2 ou \begin{tikzpicture}...\end{tikzpicture}"
                 minRows={2}
                 maxRows={12}
               />
+              {useBackend && (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    marginTop: "8px",
+                  }}
+                >
+                  <Text size="xsmall" tone="tertiary">
+                    🚀 Usando compilação backend (suporta TikZ, tabelas, etc.)
+                  </Text>
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={transparentBackground}
+                      onChange={(e) =>
+                        setTransparentBackground(e.target.checked)
+                      }
+                      style={{ cursor: "pointer" }}
+                    />
+                    <Text size="xsmall">🎨 Fundo transparente</Text>
+                  </label>
+                </div>
+              )}
             </div>
 
             {error && (
@@ -305,22 +416,55 @@ export const App = () => {
               </div>
             )}
 
-            <LatexPreview latex={latex} options={options} hasError={!!error} />
+            {useBackend && compiledImage ? (
+              <div className={styles.previewContainer}>
+                <img
+                  src={compiledImage}
+                  alt="LaTeX compilado"
+                  style={{
+                    display: "block",
+                    margin: "0 auto",
+                  }}
+                />
+              </div>
+            ) : (
+              <LatexPreview
+                latex={latex}
+                options={options}
+                hasError={!!error}
+              />
+            )}
 
-            <OptionsPanel options={options} onChange={handleOptionsChange} />
+            {!useBackend && (
+              <OptionsPanel options={options} onChange={handleOptionsChange} />
+            )}
 
-            <button
-              className={styles.addButton}
-              onClick={handleAddToDesign}
-              disabled={!!error || !latex.trim() || isProcessing}
-            >
-              <span className={styles.buttonIcon}>
-                {isProcessing ? "⏳" : "✨"}
-              </span>
-              <span className={styles.buttonText}>
-                {isProcessing ? "Adicionando..." : "Adicionar ao Design"}
-              </span>
-            </button>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <button
+                className={styles.addButton}
+                onClick={handleAddToDesign}
+                disabled={!!error || !latex.trim() || isProcessing}
+                style={{ flex: 1 }}
+              >
+                <span className={styles.buttonIcon}>
+                  {isProcessing ? "⏳" : "✨"}
+                </span>
+                <span className={styles.buttonText}>
+                  {isProcessing ? "Adicionando..." : "Adicionar ao Design"}
+                </span>
+              </button>
+
+              {useBackend && (
+                <button
+                  className={styles.addButton}
+                  onClick={compileWithBackend}
+                  disabled={isProcessing}
+                  style={{ flex: 0, minWidth: "auto", padding: "0 20px" }}
+                >
+                  🔄
+                </button>
+              )}
+            </div>
 
             <TemplateSelector onSelect={handleTemplateSelect} />
 
@@ -330,7 +474,7 @@ export const App = () => {
 
             <div className={styles.footer}>
               <Text size="xsmall" tone="tertiary" alignment="center">
-                Powered by KaTeX
+                {useBackend ? "Powered by pdflatex" : "Powered by KaTeX"}
               </Text>
             </div>
           </>

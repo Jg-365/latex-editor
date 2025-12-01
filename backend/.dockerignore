@@ -1,0 +1,5 @@
+# Backend Deployment
+
+backend/.env
+backend/temp/*
+!backend/temp/.gitkeep

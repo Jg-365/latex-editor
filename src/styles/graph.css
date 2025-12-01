@@ -125,3 +125,154 @@
   transform: translateY(-2px) scale(1.02) !important;
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2) !important;
 }
+
+.viewToggle {
+  display: flex !important;
+  gap: 10px !important;
+  justify-content: center !important;
+  margin-top: 15px !important;
+}
+
+.toggleButton {
+  padding: 10px 20px !important;
+  background: white !important;
+  border: 2px solid #e9ecef !important;
+  border-radius: 8px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.toggleButton:hover {
+  border-color: #667eea !important;
+  background: #f5f3ff !important;
+}
+
+.toggleButton.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  border-color: #667eea !important;
+}
+
+.codeEditor {
+  background: white !important;
+  border: 2px solid #e9ecef !important;
+  border-radius: 12px !important;
+  padding: 20px !important;
+  margin-bottom: 20px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+.editorHeader {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-bottom: 12px !important;
+  padding-bottom: 12px !important;
+  border-bottom: 1px solid #e9ecef !important;
+}
+
+.codeTextarea {
+  width: 100% !important;
+  min-height: 400px !important;
+  padding: 16px !important;
+  font-family: "Consolas", "Monaco", "Courier New", monospace !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  border: 1px solid #e9ecef !important;
+  border-radius: 8px !important;
+  background: #f8f9fa !important;
+  resize: vertical !important;
+  color: #2d3748 !important;
+}
+
+.codeTextarea:focus {
+  outline: none !important;
+  border-color: #667eea !important;
+  background: white !important;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .container {
+    padding: 12px !important;
+  }
+
+  .header {
+    padding: 16px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .header h2 {
+    font-size: 20px !important;
+  }
+
+  .typeSelector {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  .typeButton {
+    width: 100% !important;
+    font-size: 13px !important;
+    padding: 10px 16px !important;
+  }
+
+  .viewToggle {
+    flex-direction: row !important;
+    margin-top: 10px !important;
+  }
+
+  .toggleButton {
+    flex: 1 !important;
+    font-size: 12px !important;
+    padding: 8px 12px !important;
+  }
+
+  .preview {
+    padding: 20px !important;
+    min-height: 300px !important;
+  }
+
+  .codeTextarea {
+    min-height: 300px !important;
+    font-size: 12px !important;
+  }
+
+  .templateGrid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .addButton {
+    padding: 14px 20px !important;
+    font-size: 14px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 8px !important;
+  }
+
+  .header {
+    padding: 12px !important;
+  }
+
+  .header h2 {
+    font-size: 18px !important;
+  }
+
+  .typeButton,
+  .toggleButton {
+    font-size: 12px !important;
+    padding: 8px 12px !important;
+  }
+
+  .preview {
+    padding: 15px !important;
+    min-height: 250px !important;
+  }
+}

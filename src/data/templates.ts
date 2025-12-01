@@ -6,7 +6,8 @@ export type TemplateCategory =
   | "physics"
   | "chemistry"
   | "symbols"
-  | "advanced";
+  | "advanced"
+  | "tikz";
 
 export interface LatexTemplate {
   name: string;
@@ -369,6 +370,107 @@ export const LATEX_TEMPLATES: Record<TemplateCategory, LatexTemplate[]> = {
       name: "Fração Complexa",
       latex: "\\frac{\\frac{a}{b}}{\\frac{c}{d}} = \\frac{ad}{bc}",
       preview: "(a/b)/(c/d) = ad/bc",
+    },
+  ],
+
+  tikz: [
+    {
+      name: "🔄 Grafo Direcionado",
+      latex: `\\begin{tikzpicture}[scale=1.5]
+  % Nós
+  \\node[circle,draw,fill=blue!20] (A) at (0,0) {A};
+  \\node[circle,draw,fill=green!20] (B) at (2,0) {B};
+  \\node[circle,draw,fill=red!20] (C) at (1,1.5) {C};
+  
+  % Arestas
+  \\draw[->] (A) -- (B);
+  \\draw[->] (B) -- (C);
+  \\draw[->] (C) -- (A);
+\\end{tikzpicture}`,
+      preview: "Grafo com 3 nós",
+    },
+    {
+      name: "🎨 Grafo Colorido",
+      latex: `\\begin{tikzpicture}[scale=1.5]
+  % Nós
+  \\node[circle,draw,fill=blue!20] (A) at (0,0) {A};
+  \\node[circle,draw,fill=green!20] (B) at (2,0) {B};
+  \\node[circle,draw,fill=red!20] (C) at (1,1.5) {C};
+  
+  % Arestas coloridas
+  \\draw[->,red,thick] (A) -- (B);
+  \\draw[->,blue,ultra thick] (B) -- (C);
+  \\draw[->,green,very thick] (C) -- (A);
+\\end{tikzpicture}`,
+      preview: "Arestas coloridas",
+    },
+    {
+      name: "📊 Fluxograma",
+      latex: `\\begin{tikzpicture}[node distance=2cm]
+  \\node[draw,rounded corners] (inicio) {Início};
+  \\node[draw,below of=inicio] (proc) {Processamento};
+  \\node[draw,diamond,below of=proc] (dec) {Decisão?};
+  \\node[draw,below left of=dec] (sim) {Sim};
+  \\node[draw,below right of=dec] (nao) {Não};
+  \\node[draw,rounded corners,below of=dec,node distance=3cm] (fim) {Fim};
+  
+  \\draw[->] (inicio) -- (proc);
+  \\draw[->] (proc) -- (dec);
+  \\draw[->] (dec) -| (sim);
+  \\draw[->] (dec) -| (nao);
+  \\draw[->] (sim) |- (fim);
+  \\draw[->] (nao) |- (fim);
+\\end{tikzpicture}`,
+      preview: "Fluxo de decisão",
+    },
+    {
+      name: "🌳 Árvore Binária",
+      latex: `\\begin{tikzpicture}[level distance=1.5cm,
+  level 1/.style={sibling distance=3cm},
+  level 2/.style={sibling distance=1.5cm}]
+  \\node[circle,draw] {1}
+    child {node[circle,draw] {2}
+      child {node[circle,draw] {4}}
+      child {node[circle,draw] {5}}
+    }
+    child {node[circle,draw] {3}
+      child {node[circle,draw] {6}}
+      child {node[circle,draw] {7}}
+    };
+\\end{tikzpicture}`,
+      preview: "Árvore com 7 nós",
+    },
+    {
+      name: "📐 Eixos Cartesianos",
+      latex: `\\begin{tikzpicture}
+  \\draw[->] (-3,0) -- (3,0) node[right] {$x$};
+  \\draw[->] (0,-3) -- (0,3) node[above] {$y$};
+  \\draw[domain=-2:2,smooth,variable=\\x,blue,thick] plot ({\\x},{\\x*\\x});
+\\end{tikzpicture}`,
+      preview: "Plano cartesiano",
+    },
+    {
+      name: "⭐ Formas Geométricas",
+      latex: `\\begin{tikzpicture}
+  \\draw[fill=blue!20] (0,0) circle (1cm);
+  \\draw[fill=red!20] (3,0) rectangle (5,2);
+  \\draw[fill=green!20] (7,1) -- (8,0) -- (9,1) -- (8,2) -- cycle;
+\\end{tikzpicture}`,
+      preview: "Círculo, retângulo, polígono",
+    },
+    {
+      name: "🔢 Máquina de Estados",
+      latex: `\\begin{tikzpicture}[->,>=stealth,node distance=2.5cm]
+  \\node[state,initial] (q0) {$q_0$};
+  \\node[state,accepting,right of=q0] (q1) {$q_1$};
+  \\node[state,below of=q0] (q2) {$q_2$};
+  
+  \\path (q0) edge[bend left] node {a} (q1)
+        (q1) edge[bend left] node {b} (q0)
+        (q0) edge node {c} (q2)
+        (q2) edge[loop below] node {d} (q2);
+\\end{tikzpicture}`,
+      preview: "Autômato finito",
     },
   ],
 };

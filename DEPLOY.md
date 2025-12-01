@@ -1,6 +1,90 @@
-# 🚀 Deploy do LaTeX Editor na Vercel
+# 📦 Deploy do LaTeX Editor para Produção
 
-## Método 1: Deploy via GitHub (MAIS FÁCIL)
+## 🏗️ Arquitetura
+
+- **Backend**: Render.com (Docker com MiKTeX + Node.js + pdflatex)
+- **Frontend**: Vercel (React/Vite + Canva SDK)
+
+---
+
+# 🚀 PARTE 1: Deploy do Backend (Render.com)
+
+## Passo 1: Criar Conta no Render
+
+1. Acesse [render.com](https://render.com)
+2. Clique em "Get Started"
+3. Faça login com sua conta GitHub
+
+## Passo 2: Fazer Push do Código
+
+```bash
+cd latex-editor
+git add .
+git commit -m "Preparar para deploy backend"
+git push origin main
+```
+
+## Passo 3: Criar Web Service no Render
+
+1. No dashboard do Render, clique em **"New +"** → **"Web Service"**
+2. Conecte seu repositório GitHub: `Jg-365/latex-editor`
+3. Configure:
+   - **Name**: `latex-backend`
+   - **Region**: Oregon (Free tier)
+   - **Branch**: `main`
+   - **Root Directory**: `backend`
+   - **Environment**: `Docker`
+   - **Plan**: Free
+4. Clique em **"Create Web Service"**
+
+## Passo 4: Aguardar Deploy (10-15 min)
+
+O Render vai:
+
+- ✅ Instalar Ubuntu + Node.js
+- ✅ Instalar MiKTeX completo
+- ✅ Instalar ImageMagick + Ghostscript
+- ✅ Instalar dependências npm
+- ✅ Iniciar o servidor
+
+Você verá logs em tempo real. Ao final, terá uma URL:
+`https://latex-backend.onrender.com` (ou similar)
+
+## Passo 5: Testar Backend
+
+Abra no navegador:
+
+```
+https://seu-backend.onrender.com/api/health
+```
+
+Deve retornar:
+
+```json
+{ "status": "ok", "message": "Servidor LaTeX rodando" }
+```
+
+---
+
+# 🌐 PARTE 2: Deploy do Frontend (Vercel)
+
+## Passo 1: Atualizar URL do Backend
+
+Edite `.env.production` e substitua pela URL real do seu backend:
+
+```bash
+VITE_BACKEND_URL=https://seu-backend.onrender.com
+```
+
+Commit:
+
+```bash
+git add .env.production
+git commit -m "Atualizar URL do backend"
+git push origin main
+```
+
+## Passo 2: Deploy via GitHub (MAIS FÁCIL)
 
 ### Passo a Passo:
 
@@ -16,8 +100,8 @@
 3. **Configure o projeto**:
 
    ```
-   Framework Preset: Other
-   Root Directory: latex-editor
+   Framework Preset: Vite
+   Root Directory: ./
    Build Command: npm run build
    Output Directory: dist
    Install Command: npm install
@@ -26,7 +110,7 @@
 4. **Adicione Environment Variables** (IMPORTANTE):
 
    ```
-   CANVA_BACKEND_HOST = (deixe em branco por enquanto)
+   VITE_BACKEND_URL = https://seu-backend.onrender.com
    CANVA_APP_ID = AAG6GZyl4rw
    CANVA_APP_ORIGIN = https://app-aag6gzyl4rw.canva-apps.com
    CANVA_HMR_ENABLED = FALSE
@@ -37,10 +121,11 @@
 6. **Após o deploy, você receberá uma URL**:
    - Exemplo: `https://latex-editor-xyz.vercel.app`
 
-7. **ATUALIZE a Environment Variable**:
-   - Vá em: Settings → Environment Variables
-   - Edite `CANVA_BACKEND_HOST` = `https://latex-editor-xyz.vercel.app`
-   - Faça um novo deploy: Deployments → ... → Redeploy
+7. **Teste a aplicação**:
+   - Abra a URL do Vercel
+   - Digite `E = mc^2`
+   - Clique em "🔄 Recompilar" (com checkbox "Fundo transparente" marcado)
+   - Deve aparecer a imagem renderizada!
 
 8. **Atualize no Canva Developer Portal**:
    - 🔗 https://www.canva.com/developers/apps
@@ -50,37 +135,35 @@
 
 ---
 
-## Método 2: Deploy via CLI
+# ✅ PARTE 3: Verificação e Testes
 
-### Instalar Vercel CLI:
-
-```bash
-npm install -g vercel
-```
-
-### Login:
+## Testar Backend Diretamente
 
 ```bash
-vercel login
+# Health check
+curl https://seu-backend.onrender.com/api/health
+
+# Testar compilação
+curl -X POST https://seu-backend.onrender.com/api/compile \
+  -H "Content-Type: application/json" \
+  -d '{"latex":"E = mc^2"}'
 ```
 
-### Preparar e Deploy:
+## Testar Frontend + Backend Integrado
 
-```bash
-cd C:\latex-editor\latex-editor
+1. Abra: `https://latex-editor-xyz.vercel.app`
+2. Digite código TikZ:
 
-# Atualizar .env temporariamente
-# (Mude CANVA_BACKEND_HOST para uma URL placeholder)
-
-# Deploy
-vercel --prod
+```latex
+\begin{tikzpicture}
+  \draw[thick,blue] (0,0) -- (2,2);
+  \node at (1,-0.5) {Teste};
+\end{tikzpicture}
 ```
 
-### Após receber a URL:
-
-1. Atualize `CANVA_BACKEND_HOST` no dashboard Vercel
-2. Faça redeploy: `vercel --prod`
-3. Atualize a URL no Canva Developer Portal
+3. Marque "Fundo transparente"
+4. Clique "🔄 Recompilar"
+5. Deve aparecer o diagrama em alta qualidade (1200 DPI)!
 
 ---
 
@@ -95,20 +178,33 @@ A Vercel fará deploy automaticamente sempre que você:
 
 ## 🐛 Troubleshooting
 
-### Erro: "BACKEND_HOST should not be localhost"
+### Backend não responde (500 Error)
 
-**Solução**: Certifique-se de que `CANVA_BACKEND_HOST` nas Environment Variables da Vercel está com a URL de produção, não localhost.
+1. Verifique logs no Render: Dashboard → latex-backend → Logs
+2. Comum no primeiro deploy: aguarde instalação completa do MiKTeX (15 min)
+3. Teste endpoint: `/api/check-dependencies`
 
-### App não carrega no Canva
+### CORS Error no Frontend
 
-1. Verifique se a URL no Canva Developer Portal está correta
-2. Certifique-se de que o deploy está em "Production" (não Preview)
-3. Verifique os logs no dashboard Vercel
+- ✅ Já está configurado para aceitar `*.vercel.app` e `*.onrender.com`
+- Verifique se `VITE_BACKEND_URL` está correto na Vercel
 
-### Erro de CORS
+### Imagens saem em baixa qualidade
 
-- Certifique-se de que todas as URLs estão corretas
-- Verifique se `CANVA_APP_ORIGIN` está correto
+- ✅ Já está configurado para 1200 DPI + anti-aliasing
+- Problema pode ser: backend não terminou de instalar MiKTeX
+
+### Backend "dorme" (Free Plan)
+
+- ⚠️ Render Free plan: serviço dorme após 15 min inatividade
+- ⏱️ Primeira requisição após dormir: ~30 segundos
+- 💡 Solução: upgrade para Starter ($7/mês) ou fazer um ping periódico
+
+### Erro: "pdflatex not found"
+
+- Verifique logs do Docker build
+- Certifique-se de que o Dockerfile está completo
+- Pode ser necessário rebuild: Dashboard → Deploy → Manual Deploy
 
 ---
 
@@ -122,14 +218,71 @@ Acesse: https://vercel.com/dashboard
 
 ---
 
-## 🎉 Pronto!
+---
 
-Seu **LaTeX Editor** com aba de gráficos agora está rodando em produção! ✨
+# 🎉 Pronto!
 
-**Funcionalidades incluídas:**
+Seu **LaTeX Editor** está no ar em produção! ✨
 
-- ✨ Editor LaTeX com KaTeX
-- 📊 Gerador de Gráficos com Chart.js
-- 🎨 Interface moderna com gradientes
-- 📏 Slider de tamanho de fonte
-- 🚀 Templates avançados (itemize, matrizes, casos)
+## URLs Finais
+
+- 🌐 **Frontend**: `https://latex-editor-xyz.vercel.app`
+- 🔧 **Backend**: `https://latex-backend.onrender.com`
+
+## Funcionalidades Completas
+
+- ✅ **Compilação Backend**: pdflatex + MiKTeX completo
+- ✅ **TikZ Diagrams**: Grafos, fluxogramas, árvores, máquinas de estado
+- ✅ **Alta Qualidade**: 1200 DPI + anti-aliasing vetorial
+- ✅ **Fundo Transparente**: Checkbox para remover fundo branco
+- ✅ **Templates LaTeX**: Álgebra, Cálculo, Física, Química, TikZ
+- ✅ **Auto-compilação**: Debounce de 1 segundo
+- ✅ **Integração Canva**: Adiciona imagens diretamente ao design
+
+## Limites Free Tier
+
+### Render
+
+- ✅ 750 horas/mês
+- ⚠️ Dorme após 15 min inatividade
+- 💾 512 MB RAM
+
+### Vercel
+
+- ✅ 100 GB bandwidth/mês
+- ✅ Deployments ilimitados
+- ✅ Preview deployments automáticos
+
+## Deploy Automático
+
+Ambos têm deploy automático ao fazer push:
+
+```bash
+git add .
+git commit -m "Nova feature"
+git push origin main
+```
+
+- ✅ Vercel: ~2 minutos
+- ✅ Render: ~10 minutos
+
+---
+
+## 💰 Upgrade (Opcional)
+
+### Render - Starter ($7/mês)
+
+- ✅ Serviço sempre ativo (sem dormir)
+- ✅ Mais recursos
+
+### Vercel - Pro ($20/mês)
+
+- ✅ Mais bandwidth
+- ✅ Analytics avançado
+
+---
+
+## 📞 Suporte
+
+- 📧 Render: [help.render.com](https://render.com/docs)
+- 📧 Vercel: [vercel.com/support](https://vercel.com/support)

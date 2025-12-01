@@ -24,6 +24,7 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
       { key: "chemistry", label: "Química", emoji: "⚗️" },
       { key: "symbols", label: "Símbolos", emoji: "∑" },
       { key: "advanced", label: "Avançado", emoji: "🚀" },
+      { key: "tikz", label: "Diagramas TikZ", emoji: "🎨" },
     ];
 
   const templates = LATEX_TEMPLATES[selectedCategory];

@@ -36,6 +36,8 @@ export const GraphTab: React.FC = () => {
   const chartRef = useRef<any>(null);
   const [chartType, setChartType] = useState<ChartType>("line");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showCodeEditor, setShowCodeEditor] = useState(false);
+  const [codeError, setCodeError] = useState("");
 
   const [chartData, setChartData] = useState<any>({
     labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"],
@@ -50,6 +52,14 @@ export const GraphTab: React.FC = () => {
       },
     ],
   });
+
+  const [codeInput, setCodeInput] = useState(
+    JSON.stringify(chartData, null, 2),
+  );
+
+  React.useEffect(() => {
+    setCodeInput(JSON.stringify(chartData, null, 2));
+  }, [chartData]);
 
   const chartOptions = {
     responsive: true,
@@ -193,6 +203,19 @@ export const GraphTab: React.FC = () => {
     setChartData(template.data);
   };
 
+  const handleCodeChange = (newCode: string) => {
+    setCodeInput(newCode);
+    try {
+      const parsed = JSON.parse(newCode);
+      setChartData(parsed);
+      setCodeError("");
+    } catch (err) {
+      if (err instanceof Error) {
+        setCodeError(err.message);
+      }
+    }
+  };
+
   const renderChart = () => {
     switch (chartType) {
       case "line":
@@ -232,9 +255,43 @@ export const GraphTab: React.FC = () => {
             🥧 Pizza
           </button>
         </div>
+
+        <div className={styles.viewToggle}>
+          <button
+            className={`${styles.toggleButton} ${!showCodeEditor ? styles.active : ""}`}
+            onClick={() => setShowCodeEditor(false)}
+          >
+            👁️ Preview
+          </button>
+          <button
+            className={`${styles.toggleButton} ${showCodeEditor ? styles.active : ""}`}
+            onClick={() => setShowCodeEditor(true)}
+          >
+            💻 Código
+          </button>
+        </div>
       </div>
 
-      <div className={styles.preview}>{renderChart()}</div>
+      {showCodeEditor ? (
+        <div className={styles.codeEditor}>
+          <div className={styles.editorHeader}>
+            <Text size="small">✍️ Edite o JSON do gráfico:</Text>
+            {codeError && (
+              <Text size="small" tone="critical">
+                ⚠️ {codeError}
+              </Text>
+            )}
+          </div>
+          <textarea
+            className={styles.codeTextarea}
+            value={codeInput}
+            onChange={(e) => handleCodeChange(e.target.value)}
+            spellCheck={false}
+          />
+        </div>
+      ) : (
+        <div className={styles.preview}>{renderChart()}</div>
+      )}
 
       <button
         className={styles.addButton}
